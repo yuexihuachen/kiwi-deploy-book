@@ -1,0 +1,34 @@
+version: '3'
+services:
+
+  readbook:
+    container_name: docker-node-book
+    build:
+      context: ./books
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+    networks:
+      - backend-network
+
+  nginx:
+    container_name: docker-nginx
+    build:
+      context: ./nginx
+    restart: always
+    image: nginx:latest
+    volumes:
+      - /etc/letsencrypt/live/book.kongzi.ga/fullchain.pem:/etc/letsencrypt/live/book.kongzi.ga/fullchain.pem
+      - /etc/letsencrypt/live/book.kongzi.ga/privkey.pem:/etc/letsencrypt/live/book.kongzi.ga/privkey.pem
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - readbook
+    networks:
+      - backend-network
+
+networks:
+    backend-network:
+        driver: bridge
