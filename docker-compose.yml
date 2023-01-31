@@ -13,7 +13,7 @@ services:
       - backend-network
 
   nginx:
-    container_name: docker-nginx
+    container_name: docker-book-nginx
     build:
       context: ./nginx
     restart: always
